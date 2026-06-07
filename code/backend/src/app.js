@@ -12,7 +12,7 @@ const app = express();
 
 app.use(helmet());
 app.use(cors({ origin: (origin, cb) => (!origin || config.cors.allowedOrigins.includes(origin)) ? cb(null,true) : cb(new Error(`CORS: ${origin} not allowed`)), credentials: true }));
-app.use(rateLimit({ windowMs: config.rateLimit.windowMs, max: config.rateLimit.max, message: { success:false, message:'Too many requests. Try again later.' }, standardHeaders:true, legacyHeaders:false }));
+app.use(rateLimit({ windowMs: config.rateLimit.windowMs, max: config.rateLimit.max, skip: config.rateLimit.skip, message: { success:false, message:'Too many requests. Try again later.' }, standardHeaders:true, legacyHeaders:false }));
 app.use(express.json({ limit:'10mb' }));
 app.use(express.urlencoded({ extended:true, limit:'10mb' }));
 app.use(morgan('combined', { stream: { write: m => logger.http(m.trim()) } }));

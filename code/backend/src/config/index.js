@@ -23,7 +23,10 @@ const config = {
   },
   rateLimit: {
     windowMs: 15 * 60 * 1000,
-    max: process.env.NODE_ENV === 'production' ? 100 : 1000,
+    // 500 per 15 min for public reads; enquiry POST is separately limited in the route
+    max: process.env.NODE_ENV === 'production' ? 500 : 2000,
+    // Frontend EC2 IP — skip rate limiting for server-side rendering calls
+    skip: (req) => req.ip === '13.205.154.93',
   },
 };
 
