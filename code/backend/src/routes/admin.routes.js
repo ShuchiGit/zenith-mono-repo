@@ -1,0 +1,10 @@
+const router = require('express').Router();
+const { body } = require('express-validator');
+const ctrl = require('../controllers/admin.controller');
+const { authenticate } = require('../middlewares/auth.middleware');
+const { validate }     = require('../middlewares/validate.middleware');
+router.post('/login',    [body('email').isEmail().withMessage('Valid email required.'), body('password').notEmpty().withMessage('Password required.')], validate, ctrl.login);
+router.post('/refresh',  ctrl.refreshToken);
+router.get('/me',        authenticate, ctrl.getMe);
+router.put('/password',  authenticate, [body('currentPassword').notEmpty().withMessage('Current password required.'), body('newPassword').isLength({min:8}).withMessage('New password min 8 chars.')], validate, ctrl.changePassword);
+module.exports = router;

@@ -1,0 +1,10 @@
+const svc = require('../services/enquiry.service');
+const { successResponse, errorResponse, paginatedResponse } = require('../utils/apiResponse');
+const { getPaginationParams } = require('../utils/pagination');
+const { HTTP_STATUS } = require('../config/constants');
+const submitEnquiry      = async (r,res,n) => { try { return successResponse(res,await svc.submitEnquiry(r.body),'Enquiry submitted successfully.',HTTP_STATUS.CREATED); } catch(e){n(e);} };
+const listEnquiries      = async (r,res,n) => { try { const pg=getPaginationParams(r.query); const {enquiries,total}=await svc.listEnquiries({status:r.query.status,source:r.query.source,search:r.query.search},pg); return paginatedResponse(res,enquiries,{total,page:pg.page,limit:pg.limit,totalPages:Math.ceil(total/pg.limit)}); } catch(e){n(e);} };
+const getEnquiry         = async (r,res,n) => { try { const e=await svc.getEnquiry(+r.params.id); if(!e) return errorResponse(res,`Enquiry ${r.params.id} not found.`,HTTP_STATUS.NOT_FOUND); return successResponse(res,e,'Enquiry fetched.'); } catch(e){n(e);} };
+const updateEnquiryStatus= async (r,res,n) => { try { return successResponse(res,await svc.updateEnquiryStatus(+r.params.id,r.body.status),'Status updated.'); } catch(e){n(e);} };
+const updateEnquiryNotes = async (r,res,n) => { try { return successResponse(res,await svc.updateEnquiryNotes(+r.params.id,r.body.notes),'Notes updated.'); } catch(e){n(e);} };
+module.exports = { submitEnquiry, listEnquiries, getEnquiry, updateEnquiryStatus, updateEnquiryNotes };

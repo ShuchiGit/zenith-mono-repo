@@ -1,0 +1,13 @@
+const svc = require('../services/property.service');
+const { successResponse, errorResponse, paginatedResponse } = require('../utils/apiResponse');
+const { getPaginationParams } = require('../utils/pagination');
+const { HTTP_STATUS } = require('../config/constants');
+const listProperties      = async (r,res,n) => { try { const pg=getPaginationParams(r.query); const {properties,total}=await svc.listProperties({status:r.query.status,city:r.query.city,type:r.query.type,bhkType:r.query.bhkType,search:r.query.search,isActive:true},pg); return paginatedResponse(res,properties,{total,page:pg.page,limit:pg.limit,totalPages:Math.ceil(total/pg.limit)}); } catch(e){n(e);} };
+const getPropertyBySlug   = async (r,res,n) => { try { const p=await svc.getPropertyBySlug(r.params.slug); if(!p) return errorResponse(res,`No property found with slug '${r.params.slug}'.`,HTTP_STATUS.NOT_FOUND); return successResponse(res,p,'Property fetched.'); } catch(e){n(e);} };
+const createProperty      = async (r,res,n) => { try { return successResponse(res,await svc.createProperty(r.body),'Property created.',HTTP_STATUS.CREATED); } catch(e){n(e);} };
+const updateProperty      = async (r,res,n) => { try { return successResponse(res,await svc.updateProperty(+r.params.id,r.body),'Property updated.'); } catch(e){n(e);} };
+const togglePropertyStatus= async (r,res,n) => { try { const p=await svc.togglePropertyStatus(+r.params.id); return successResponse(res,p,`Property ${p.isActive?'activated':'deactivated'}.`); } catch(e){n(e);} };
+const deleteProperty      = async (r,res,n) => { try { await svc.deleteProperty(+r.params.id); return successResponse(res,null,'Property deleted.'); } catch(e){n(e);} };
+const uploadPropertyImages= async (r,res,n) => { try { if(!r.files?.length) return errorResponse(res,'No images provided.',HTTP_STATUS.BAD_REQUEST); return successResponse(res,await svc.uploadPropertyImages(+r.params.id,r.files),'Images uploaded.'); } catch(e){n(e);} };
+const deletePropertyImage = async (r,res,n) => { try { if(!r.body.imageKey) return errorResponse(res,'Image key required.',HTTP_STATUS.BAD_REQUEST); return successResponse(res,await svc.deletePropertyImage(+r.params.id,r.body.imageKey),'Image deleted.'); } catch(e){n(e);} };
+module.exports = { listProperties, getPropertyBySlug, createProperty, updateProperty, togglePropertyStatus, deleteProperty, uploadPropertyImages, deletePropertyImage };

@@ -1,0 +1,17 @@
+const router = require('express').Router();
+const { body, param } = require('express-validator');
+const ctrl = require('../controllers/project.controller');
+const { authenticate } = require('../middlewares/auth.middleware');
+const { validate }     = require('../middlewares/validate.middleware');
+const { upload }       = require('../middlewares/upload.middleware');
+const v = [body('name').trim().notEmpty().withMessage('Name required.'), body('location').trim().notEmpty().withMessage('Location required.'), body('city').trim().notEmpty().withMessage('City required.'), body('bhkTypes').trim().notEmpty().withMessage('BHK types required.'), body('priceMin').isDecimal().withMessage('Valid min price required.'), body('priceMax').isDecimal().withMessage('Valid max price required.'), body('status').isIn(['UNDER_CONSTRUCTION','READY_TO_MOVE','NEW_LAUNCH']).withMessage('Invalid status.')];
+router.get('/',           ctrl.listProjects);
+router.get('/featured',   ctrl.listFeaturedProjects);
+router.get('/:slug',      ctrl.getProjectBySlug);
+router.post('/',          authenticate, v, validate, ctrl.createProject);
+router.put('/:id',        authenticate, param('id').isInt({min:1}), v, validate, ctrl.updateProject);
+router.patch('/:id/toggle', authenticate, param('id').isInt({min:1}), validate, ctrl.toggleProjectStatus);
+router.delete('/:id',     authenticate, param('id').isInt({min:1}), validate, ctrl.deleteProject);
+router.post('/:id/images',authenticate, param('id').isInt({min:1}), validate, upload.array('images',10), ctrl.uploadProjectImages);
+router.delete('/:id/images',authenticate, param('id').isInt({min:1}), validate, ctrl.deleteProjectImage);
+module.exports = router;

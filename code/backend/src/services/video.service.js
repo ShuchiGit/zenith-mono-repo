@@ -1,0 +1,10 @@
+const dp = require('../dataProviders/video.dataProvider');
+const { createHttpError } = require('../middlewares/errorHandler');
+const { HTTP_STATUS } = require('../config/constants');
+const extractId = (url) => { const m = url.match(/(?:youtube\.com\/watch\?v=|youtu\.be\/|youtube\.com\/embed\/)([^&?\s]+)/); if (!m) throw createHttpError('Invalid YouTube URL.', HTTP_STATUS.BAD_REQUEST); return m[1]; };
+const listVideos     = ()       => dp.findAll();
+const createVideo    = (data)   => dp.create({ ...data, youtubeId: extractId(data.youtubeUrl) });
+const updateVideo    = async (id,data) => { if (!await dp.findById(id)) throw createHttpError(`Video with ID ${id} not found.`, HTTP_STATUS.NOT_FOUND); return dp.update(id, { ...data, youtubeId: extractId(data.youtubeUrl) }); };
+const updateSortOrder= async (id,s)    => { if (!await dp.findById(id)) throw createHttpError(`Video with ID ${id} not found.`, HTTP_STATUS.NOT_FOUND); return dp.update(id, { sortOrder: s }); };
+const deleteVideo    = async (id)      => { if (!await dp.findById(id)) throw createHttpError(`Video with ID ${id} not found.`, HTTP_STATUS.NOT_FOUND); return dp.remove(id); };
+module.exports = { listVideos, createVideo, updateVideo, updateSortOrder, deleteVideo };

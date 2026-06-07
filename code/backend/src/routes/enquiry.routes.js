@@ -1,0 +1,11 @@
+const router = require('express').Router();
+const { body, param } = require('express-validator');
+const ctrl = require('../controllers/enquiry.controller');
+const { authenticate } = require('../middlewares/auth.middleware');
+const { validate }     = require('../middlewares/validate.middleware');
+router.post('/',               [body('name').trim().notEmpty().withMessage('Name required.'), body('phone').trim().notEmpty().withMessage('Phone required.'), body('source').trim().notEmpty().withMessage('Source required.')], validate, ctrl.submitEnquiry);
+router.get('/',                authenticate, ctrl.listEnquiries);
+router.get('/:id',             authenticate, param('id').isInt({min:1}), validate, ctrl.getEnquiry);
+router.patch('/:id/status',    authenticate, param('id').isInt({min:1}), body('status').isIn(['NEW','CONTACTED','CLOSED']).withMessage('Invalid status.'), validate, ctrl.updateEnquiryStatus);
+router.patch('/:id/notes',     authenticate, param('id').isInt({min:1}), body('notes').trim().notEmpty().withMessage('Notes cannot be empty.'), validate, ctrl.updateEnquiryNotes);
+module.exports = router;

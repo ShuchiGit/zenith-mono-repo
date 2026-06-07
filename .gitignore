@@ -1,0 +1,69 @@
+# Dependencies
+node_modules/
+.pnp
+.pnp.js
+
+# Build outputs
+.next/
+dist/
+build/
+out/
+
+# Environment files (NEVER commit real secrets)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+code/frontend/.env.local
+code/admin/.env.local
+code/backend/.env
+
+# Logs
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Terraform state (contains secrets)
+infra/**/.terraform/
+infra/**/terraform.tfstate
+infra/**/terraform.tfstate.backup
+infra/**/.terraform.lock.hcl
+infra/**/terraform.tfvars
+
+# SSH keys
+*.pem
+*.key
+
+# Claude Code memory (local only)
+.claude/
+
+# Loose files in root (canonical versions are in scripts/)
+seed_data.sql
+code/setup.sh
+
+# Admin production env
+code/admin/.env.production
+
+# Prisma generated (regenerated on setup)
+code/backend/node_modules/
+
+# Next.js cache
+code/frontend/.next/
+code/frontend/node_modules/
+
+# Vite admin
+code/admin/node_modules/
+code/admin/dist/

@@ -1,0 +1,11 @@
+const router = require('express').Router();
+const { body, param } = require('express-validator');
+const ctrl = require('../controllers/video.controller');
+const { authenticate } = require('../middlewares/auth.middleware');
+const { validate }     = require('../middlewares/validate.middleware');
+router.get('/',           ctrl.listVideos);
+router.post('/',          authenticate, [body('title').trim().notEmpty().withMessage('Title required.'), body('youtubeUrl').trim().isURL().withMessage('Valid YouTube URL required.')], validate, ctrl.createVideo);
+router.put('/:id',        authenticate, param('id').isInt({min:1}), [body('title').trim().notEmpty(), body('youtubeUrl').trim().isURL()], validate, ctrl.updateVideo);
+router.patch('/:id/order',authenticate, param('id').isInt({min:1}), body('sortOrder').isInt({min:0}), validate, ctrl.updateSortOrder);
+router.delete('/:id',     authenticate, param('id').isInt({min:1}), validate, ctrl.deleteVideo);
+module.exports = router;
