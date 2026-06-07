@@ -18,7 +18,7 @@ const config = {
   },
   cors: {
     allowedOrigins: process.env.NODE_ENV === 'production'
-      ? ['https://zenithestate.in', 'https://admin.zenithestate.in']
+      ? ['https://zenithestate.in', 'https://www.zenithestate.in', 'https://admin.zenithestate.in']
       : ['http://localhost:3000', 'http://localhost:5173'],
   },
   rateLimit: {
