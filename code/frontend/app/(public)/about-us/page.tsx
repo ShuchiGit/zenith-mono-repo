@@ -88,7 +88,15 @@ export default async function AboutPage() {
             </div>
             <div className="grid grid-cols-2 gap-4">
               {statsGrid.map((s) => (
-                <div key={s.label} className="glass-card rounded-2xl p-6 text-center">
+                <div
+                  key={s.label}
+                  className="glass-card rounded-2xl p-6 text-center cursor-default
+                    shadow-[0_8px_40px_rgba(0,109,119,0.12)]
+                    hover:shadow-[0_20px_56px_rgba(0,109,119,0.20)]
+                    hover:-translate-y-1.5
+                    hover:border-[rgba(131,197,190,0.5)]
+                    transition-all duration-300"
+                >
                   <div className="font-heading text-3xl font-bold text-[#006d77] mb-1">{s.value}</div>
                   <div className="text-gray-500 text-sm">{s.label}</div>
                 </div>
@@ -98,16 +106,39 @@ export default async function AboutPage() {
         </div>
       </section>
 
-      <section className="section-padding bg-[#edf6f9]">
-        <div className="container mx-auto px-4">
+      <section className="section-padding relative overflow-hidden"
+        style={{
+          background: 'linear-gradient(135deg, #e6f4f5 0%, #edf6f9 40%, rgba(255,221,210,0.35) 75%, rgba(131,197,190,0.15) 100%)',
+        }}
+      >
+        {/* Decorative blobs */}
+        <div className="absolute -top-16 -right-16 w-72 h-72 rounded-full opacity-20 pointer-events-none"
+          style={{ background: 'radial-gradient(circle, #83c5be 0%, transparent 70%)' }} />
+        <div className="absolute -bottom-12 -left-12 w-56 h-56 rounded-full opacity-15 pointer-events-none"
+          style={{ background: 'radial-gradient(circle, #e29578 0%, transparent 70%)' }} />
+
+        <div className="container mx-auto px-4 relative">
           <div className="text-center mb-12">
             <p className="text-[#e29578] text-sm font-semibold uppercase tracking-widest mb-3">What We Stand For</p>
             <h2 className="section-title text-4xl">Our Core Values</h2>
           </div>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
             {values.map(({ icon: Icon, title, desc }) => (
-              <div key={title} className="glass-card rounded-2xl p-6 text-center">
-                <div className="w-12 h-12 rounded-xl bg-[#006d77] flex items-center justify-center mx-auto mb-4">
+              <div
+                key={title}
+                className="group rounded-2xl p-6 text-center cursor-default
+                  bg-white/60 backdrop-blur-md
+                  border border-[rgba(131,197,190,0.25)]
+                  shadow-[0_4px_24px_rgba(0,109,119,0.08)]
+                  hover:shadow-[0_16px_48px_rgba(0,109,119,0.18)]
+                  hover:-translate-y-2
+                  hover:bg-white/90
+                  hover:border-[rgba(131,197,190,0.5)]
+                  transition-all duration-300"
+              >
+                <div className="w-12 h-12 rounded-xl bg-[#006d77] flex items-center justify-center mx-auto mb-4
+                  group-hover:shadow-[0_6px_20px_rgba(0,109,119,0.35)]
+                  transition-shadow duration-300">
                   <Icon className="w-6 h-6 text-white" />
                 </div>
                 <h3 className="font-heading text-lg text-[#006d77] mb-2">{title}</h3>
